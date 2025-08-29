@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charged Magazine - Science & Technology Journalism</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #2a2a2a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Scientific Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        .science-element {
+            position: absolute;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            pointer-events: none;
+            font-weight: 600;
+        }
+
+        .formula {
+            font-size: clamp(14px, 2.5vw, 22px);
+            animation: drift 18s infinite linear;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .molecule-svg {
+            width: 60px;
+            height: 60px;
+            animation: rotate-drift 25s infinite linear;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+        }
+
+        .data-stream {
+            font-size: 12px;
+            font-family: 'Monaco', monospace;
+            animation: data-flow 15s infinite linear;
+            white-space: nowrap;
+            opacity: 0.8;
+        }
+
+        @keyframes drift {
+            0% { 
+                transform: translateY(100vh) translateX(-80px) rotate(0deg); 
+                opacity: 0; 
+            }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { 
+                transform: translateY(-150px) translateX(80px) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        @keyframes rotate-drift {
+            0% { 
+                transform: translateY(100vh) translateX(0px) rotate(0deg) scale(0.8); 
+                opacity: 0; 
+            }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { 
+                transform: translateY(-150px) translateX(120px) rotate(720deg) scale(1.2); 
+                opacity: 0; 
+            }
+        }
+
+        @keyframes data-flow {
+            0% { 
+                transform: translateY(100vh) translateX(-300px); 
+                opacity: 0; 
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-100px) translateX(300px); 
+                opacity: 0; 
+            }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(42, 42, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #cccccc;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ffffff, #cccccc);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, rgba(42, 42, 42, 1) 70%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #cccccc, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #cccccc;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #ffffff, #cccccc);
+            color: #2a2a2a;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Science Stats Section */
+        .science-stats {
+            padding: 5rem 5%;
+            background: linear-gradient(180deg, #2a2a2a, #333333);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: #ffffff;
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #cccccc;
+            font-size: 1.1rem;
+        }
+
+        /* Featured Articles */
+        .featured-section {
+            padding: 5rem 5%;
+            background: #2a2a2a;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .article-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .article-card:hover {
+            transform: scale(1.02);
+            border-color: #ffffff;
+        }
+
+        .article-image {
+            height: 200px;
+            background: linear-gradient(135deg, #ffffff, #cccccc);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-image::after {
+            content: '⚡';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            opacity: 0.3;
+            color: #2a2a2a;
+        }
+
+        .article-content {
+            padding: 2rem;
+        }
+
+        .article-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .article-excerpt {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .read-more:hover {
+            color: #cccccc;
+        }
+
+        /* Interactive Elements */
+        .interactive-section {
+            padding: 5rem 5%;
+            background: linear-gradient(180deg, #333333, #2a2a2a);
+            text-align: center;
+        }
+
+        .molecule-animation {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .atom {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: orbit 4s linear infinite;
+        }
+
+        .atom:nth-child(1) {
+            animation-delay: 0s;
+            top: 50%;
+            left: 50%;
+        }
+
+        .atom:nth-child(2) {
+            animation-delay: -1s;
+            top: 50%;
+            left: 50%;
+            background: #cccccc;
+        }
+
+        .atom:nth-child(3) {
+            animation-delay: -2s;
+            top: 50%;
+            left: 50%;
+            background: #888888;
+        }
+
+        @keyframes orbit {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg) translateX(80px) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg) translateX(80px) rotate(-360deg);
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">Charged Magazine</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#stories">Stories</a></li>
+                <li><a href="#research">Research</a></li>
+                <li><a href="#data">Data</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Charged Magazine</h1>
+            <p class="hero-subtitle">Uncovering the stories behind breakthrough research and scientific innovation</p>
+            <a href="#research" class="cta-button">Explore Stories</a>
+        </div>
+    </section>
+
+    <!-- Science Stats -->
+    <section class="science-stats fade-in">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Science Stories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Expert Contributors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1M+</div>
+                <div class="stat-label">Monthly Readers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Research Fields</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Articles -->
+    <section class="featured-section fade-in">
+        <h2 class="section-title">Latest Stories</h2>
+        <div class="articles-grid">
+            <article class="article-card">
+                <div class="article-image"></div>
+                <div class="article-content">
+                    <h3 class="article-title">CRISPR Gene Editing Revolution</h3>
+                    <p class="article-excerpt">New breakthrough in gene therapy allows scientists to edit DNA with unprecedented precision, opening doors to treating genetic disorders.</p>
+                    <a href="#" class="read-more">Read Story →</a>
+                </div>
+            </article>
+            
+            <article class="article-card">
+                <div class="article-image"></div>
+                <div class="article-content">
+                    <h3 class="article-title">Quantum Computing Milestone</h3>
+                    <p class="article-excerpt">Researchers achieve quantum supremacy with 100-qubit processor, demonstrating exponential speedup in complex calculations.</p>
+                    <a href="#" class="read-more">Read Story →</a>
+                </div>
+            </article>
+            
+            <article class="article-card">
+                <div class="article-image"></div>
+                <div class="article-content">
+                    <h3 class="article-title">Climate Science Data Analysis</h3>
+                    <p class="article-excerpt">AI-powered climate models reveal new insights into global warming patterns and potential tipping points in Earth's systems.</p>
+                    <a href="#" class="read-more">Read Story →</a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Interactive Section -->
+    <section class="interactive-section fade-in">
+        <h2 class="section-title">Innovation in Motion</h2>
+        <div class="molecule-animation">
+            <div class="atom"></div>
+            <div class="atom"></div>
+            <div class="atom"></div>
+        </div>
+        <p style="color: #cccccc; max-width: 600px; margin: 0 auto;">
+            Connecting the dots between cutting-edge research and real-world impact through 
+            in-depth science journalism and data-driven storytelling.
+        </p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Subscribe</a>
+                <a href="#">Advertise</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </div>
+            <p style="color: #666;">© 2025 Charged Magazine. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create animated scientific background elements
+        function createScientificBackground() {
+            const bgAnimation = document.getElementById('bgAnimation');
+            
+            const scientificElements = [
+                'E = mc²',
+                'DNA → RNA → Protein',
+                'C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O',
+                'Δp Δx ≥ ℏ/2',
+                'F = ma',
+                'PV = nRT',
+                'λ = h/p',
+                'S = k log W',
+                '∇ × B = μ₀J',
+                'pH = -log[H⁺]',
+                'ΔG = ΔH - TΔS',
+                '∂²ψ/∂x² = -2mE/ℏ²ψ',
+                'CO₂ + H₂O → C₆H₁₂O₆ + O₂',
+                'i² = -1',
+                'e^(iπ) + 1 = 0',
+                'CRISPR-Cas9',
+                'mRNA→tRNA→Protein',
+                'ATP + H₂O → ADP + Pi',
+                'H⁺ + OH⁻ → H₂O',
+                '∫F·dr = W'
+            ];
+            
+            const dataStreams = [
+                '01101010 01101111 01110101',
+                'ATCG GCTA TTAG CGAT',
+                '▲ 23.7% ▼ 12.4% → 45.9%',
+                'pH: 7.4 | temp: 37°C | O₂: 98%',
+                'Δt: 2.3ms | freq: 440Hz',
+                'mA: 15.7 | V: 3.3 | Ω: 220',
+                'λ=650nm | E=3.2eV | P=15mW',
+                'quantum state: |ψ⟩ = α|0⟩ + β|1⟩',
+                'molarity: 0.1M | vol: 250mL',
+                'genotype: AA, Aa, aa'
+            ];
+            
+            // Create formulas
+            for (let i = 0; i < 30; i++) {
+                const formula = document.createElement('div');
+                formula.className = 'science-element formula';
+                formula.textContent = scientificElements[Math.floor(Math.random() * scientificElements.length)];
+                formula.style.left = Math.random() * 100 + '%';
+                formula.style.animationDelay = Math.random() * 18 + 's';
+                formula.style.animationDuration = (Math.random() * 12 + 15) + 's';
+                formula.style.fontSize = (Math.random() * 8 + 14) + 'px';
+                bgAnimation.appendChild(formula);
+            }
+            
+            // Create data streams
+            for (let i = 0; i < 12; i++) {
+                const stream = document.createElement('div');
+                stream.className = 'science-element data-stream';
+                stream.textContent = dataStreams[Math.floor(Math.random() * dataStreams.length)];
+                stream.style.left = Math.random() * 100 + '%';
+                stream.style.animationDelay = Math.random() * 15 + 's';
+                stream.style.animationDuration = (Math.random() * 8 + 12) + 's';
+                stream.style.color = '#ffffff';
+                stream.style.opacity = Math.random() * 0.6 + 0.4;
+                bgAnimation.appendChild(stream);
+            }
+            
+            // Create molecule SVGs
+            for (let i = 0; i < 10; i++) {
+                const molecule = document.createElement('div');
+                molecule.className = 'science-element molecule-svg';
+                
+                const shapes = [
+                    `<svg viewBox="0 0 60 60" fill="currentColor">
+                        <path d="M10 10 Q 30 30 50 10" stroke="#ffffff" stroke-width="2" fill="none"/>
+                        <path d="M10 50 Q 30 30 50 50" stroke="#cccccc" stroke-width="2" fill="none"/>
+                        <circle cx="15" cy="15" r="2" fill="#ffffff"/>
+                        <circle cx="45" cy="15" r="2" fill="#cccccc"/>
+                        <circle cx="15" cy="45" r="2" fill="#cccccc"/>
+                        <circle cx="45" cy="45" r="2" fill="#ffffff"/>
+                    </svg>`,
+                    `<svg viewBox="0 0 60 60" fill="currentColor">
+                        <circle cx="30" cy="15" r="4" fill="#ffffff"/>
+                        <circle cx="15" cy="35" r="4" fill="#cccccc"/>
+                        <circle cx="45" cy="35" r="4" fill="#ffffff"/>
+                        <circle cx="30" cy="50" r="4" fill="#cccccc"/>
+                        <line x1="30" y1="15" x2="15" y2="35" stroke="#ffffff" stroke-width="2"/>
+                        <line x1="30" y1="15" x2="45" y2="35" stroke="#ffffff" stroke-width="2"/>
+                        <line x1="15" y1="35" x2="30" y2="50" stroke="#cccccc" stroke-width="2"/>
+                        <line x1="45" y1="35" x2="30" y2="50" stroke="#cccccc" stroke-width="2"/>
+                    </svg>`,
+                    `<svg viewBox="0 0 60 60" fill="currentColor">
+                        <circle cx="30" cy="30" r="25" stroke="#ffffff" stroke-width="1" fill="none"/>
+                        <ellipse cx="30" cy="30" rx="25" ry="8" stroke="#cccccc" stroke-width="1" fill="none"/>
+                        <ellipse cx="30" cy="30" rx="8" ry="25" stroke="#ffffff" stroke-width="1" fill="none"/>
+                        <circle cx="30" cy="30" r="3" fill="#cccccc"/>
+                    </svg>`
+                ];
+                
+                molecule.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+                molecule.style.left = Math.random() * 100 + '%';
+                molecule.style.animationDelay = Math.random() * 25 + 's';
+                molecule.style.animationDuration = (Math.random() * 15 + 20) + 's';
+                bgAnimation.appendChild(molecule);
+            }
+        }
+
+        // Scroll animations
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.fade-in');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        function smoothScroll() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(link.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Header scroll effect
+        function handleHeaderScroll() {
+            const header = document.querySelector('header');
+            
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(42, 42, 42, 0.98)';
+            } else {
+                header.style.background = 'rgba(42, 42, 42, 0.95)';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createScientificBackground();
+            smoothScroll();
+            handleScrollAnimations();
+        });
+
+        window.addEventListener('scroll', () => {
+            handleScrollAnimations();
+            handleHeaderScroll();
+        });
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.article-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'scale(1.02) rotateX(2deg)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1) rotateX(0deg)';
+            });
+        });
+    </script>
+</body>
+</html>
